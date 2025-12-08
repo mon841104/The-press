@@ -386,7 +386,7 @@
 
     <script>
         // -----------------------------------------------------------
-        // 🔑 API Key 設定
+        // 🔑 API Key 設定 (User provided)
         // -----------------------------------------------------------
         const DEFAULT_API_KEY = "AIzaSyBHeAA8yaW6o5F0DxyZ8GIRUGefvtcviLo";
 
@@ -543,7 +543,7 @@
         let currentContext = "";
         let step3History = []; 
         let currentUtterance = null; 
-        // let isPaused = false; // 已在上方宣告
+        let isPaused = false; // 已在上方宣告
 
         // ---- 文本格式化與清理 ----
         function formatAIResponse(text) {
@@ -597,9 +597,9 @@
 
             // 尋找適合的中文語音 (優先尋找 zh-TW)
             let chosenVoice = null;
-            // 1. 先找台灣繁體
+            // 1. 先找台灣繁體 (zh-TW)
             const twVoices = voices.filter(v => v.lang === 'zh-TW' || v.lang === 'zh_TW');
-            // 2. 再找通用中文
+            // 2. 再找通用中文 (zh)
             const zhVoices = voices.filter(v => v.lang.includes('zh') || v.lang.includes('ZH'));
             
             let pool = twVoices.length > 0 ? twVoices : zhVoices;
@@ -703,7 +703,7 @@
             ];
 
             try {
-                // Prompt: 極簡蘇格拉底 (禁止髒話 + 安全過濾)
+                // Prompt: 極簡蘇格拉底 (禁止髒話 + 現實檢核 + 禁統計)
                 const systemPrompt = `你是國小五年級的「蘇格拉底式引導老師」。
                 【任務】閱讀劇本，進行對話式引導。
                 【原則】
@@ -711,7 +711,8 @@
                 2. **禁止輸出統計數據**。
                 3. **結構**：一個讚美 + 一個挑戰性提問。
                 4. **語氣**：親切、好奇。
-                5. **教育安全**：嚴禁使用髒話、粗俗或攻擊性字眼。請使用溫和、理性的語言，即使在指出問題時也要保持禮貌。`;
+                5. **教育安全**：嚴禁使用髒話、粗俗或攻擊性字眼。即使批評也要溫和有禮。
+                6. **現實檢核**：如果劇本只在吵架沒結局，請溫柔問：「那阿逸最後去哪了？呆帳誰付了？」確保有解決方案。`;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',
@@ -783,7 +784,7 @@
                 const systemPrompt = `你是國小五年級的「蘇格拉底式引導老師」。
                 【任務】針對學生的回應繼續追問。
                 【知識庫】${globalDocsData} ${scenarioRolesData} ${relationshipMatrix}
-                【原則】1.極簡(100字內)。2.結構：肯定+追問。3.語氣親切。4.不給答案。5.禁止字數統計。6.教育安全：嚴禁髒話。`;
+                【原則】1.極簡(100字內)。2.結構：肯定+追問。3.語氣親切。4.不給答案。5.禁止字數統計。6.教育安全：嚴禁髒話。7.現實檢核：確保問題有被解決。`;
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',

@@ -386,12 +386,13 @@
 
     <script>
         // -----------------------------------------------------------
-        // 🔑 API Key 設定 (User provided)
+        // 🔑 API Key 設定
         // -----------------------------------------------------------
-        const DEFAULT_API_KEY = "AIzaSyBHeAA8yaW6o5F0DxyZ8GIRUGefvtcviLo";
+        const DEFAULT_API_KEY = "AIzaSyCYlv0AZTuLs2MW65hv625nE4MMIFtUPoA";
 
         let voices = [];
         let isPaused = false;
+        let currentUtterance = null; // 用於控制當前語音物件
 
         // 初始化語音
         function initVoices() {
@@ -542,8 +543,6 @@
         let currentRole = "";
         let currentContext = "";
         let step3History = []; 
-        let currentUtterance = null; 
-        let isPaused = false; // 已在上方宣告
 
         // ---- 文本格式化與清理 ----
         function formatAIResponse(text) {
